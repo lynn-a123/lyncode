@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TaskMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Task">
+        select `task`.*, `user`.`name` as userName from `task`
+		left join `user` on `task`.`user_id` = `user`.id
+
+        <where>
+			<if test="userName != null and userName != ''">
+				and `user`.`name` like concat ('%', #{userName}, '%')
+			</if>
+			<if test="category != null and category != ''">
+				and `task`.`category` like concat ('%', #{category}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				and `task`.`status` like concat ('%', #{status}, '%')
+			</if>
+			<if test="userId != null">
+				and `task`.`user_id` = #{userId}
+			</if>
+
+        </where>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Task">
+        select * from task where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from task where  id = #{id}
+    </delete>
+
+</mapper>

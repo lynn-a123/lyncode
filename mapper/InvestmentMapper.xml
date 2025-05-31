@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.InvestmentMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Investment">
+--         SELECT inv.*, u.`name` AS investName
+--         FROM `investment` inv
+--         LEFT JOIN `user` u ON inv.`user_id` = u.`id`
+        select `investment`.*, `user`.`name` as investName from `investment`
+        left join `user` on `investment`.`user_id` = `user`.id
+
+        <where>
+			<if test="investName != null and investName != ''">
+				and `user`.`name` like concat ('%', #{investName}, '%')
+			</if>
+			<if test="productName != null and productName != ''">
+				and `investment`.`product_name` like concat ('%', #{productName}, '%')
+			</if>
+			<if test="userId != null">
+				and `investment`.`user_id` = #{userId}
+			</if>
+
+        </where>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Investment">
+        select * from investment where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from investment where  id = #{id}
+    </delete>
+
+</mapper>

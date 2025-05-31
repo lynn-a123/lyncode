@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BookShelfMapper">
+
+    <select id="selectAll" resultType="com.example.entity.BookShelf">
+        select t.* from `book_shelf` t
+
+        <where>
+			<if test="bookName != null and bookName != ''">
+				and (t.`book_name` like concat ('%', #{bookName}, '%') or t.`book_author` like concat ('%', #{bookName}, '%'))
+			</if>
+				<if test="bookTypeId != null">
+				and t.`book_type_id`=#{bookTypeId}
+			</if>
+				<if test="bookId != null">
+				and t.`book_id`=#{bookId}
+			</if>
+	       <if test="uid != null">
+				and t.`uid`=#{uid}
+			</if>
+				 <if test="flag == 1">
+				  and update_time >= (CURDATE() - INTERVAL 7 DAY)
+			</if>
+        </where> 
+            <if test="sort == null">
+			  order by t.create_time desc 
+		</if>	
+		<if test="sort == 1">
+			  order by t.update_time desc 
+		</if>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.BookShelf">
+        select * from book_shelf where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from book_shelf where  id = #{id}
+    </delete>
+
+</mapper>

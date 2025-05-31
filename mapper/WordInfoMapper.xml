@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.WordInfoMapper">
+
+    <select id="selectAll" resultType="com.example.entity.WordInfo">
+        select t.* from `word_info` t
+
+        <where>
+			<if test="fileName != null and fileName != ''">
+				and t.`file_name` like concat ('%', #{fileName}, '%')
+			</if>
+			<if test="typeId != null">
+				and t.`type_id`=#{typeId}
+			</if>
+			 <if test="isCollect == 1">
+				and t.`is_collect`=#{isCollect}
+			</if>
+			 <if test="isPwd == 0">
+				and t.`is_pwd`=0
+			</if>
+			 <if test="isPwd == 1">
+				and t.`is_pwd`=#{isPwd}
+			</if>
+			 <if test="flag == 1">
+				and create_time >= (CURDATE() - INTERVAL 7 DAY)
+			</if>
+			
+			<if test="uid != null">
+				and t.`uid`=#{uid}
+			</if>
+
+        </where> 
+        <if test="sort == null">
+			  order by t.create_time desc 
+		</if>	
+        <if test="sort == 1">
+			  order by t.create_time desc 
+		</if>	
+		<if test="sort == 2">
+			  order by t.create_time asc 
+		</if>
+		<if test="sort == 3">
+			  order by t.download_nums desc 
+		</if>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.WordInfo">
+        select * from word_info where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from word_info where  id = #{id}
+    </delete>
+
+</mapper>

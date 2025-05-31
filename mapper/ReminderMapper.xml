@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ReminderMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Reminder">
+        select `reminder`.*, `task`.`title` as remName, `task`.`status` as remStatus, `task`.`due_date` as remindTime, `task`.`progress` as progress, `user`.`name` as userName from `reminder`
+		left join `task` on `reminder`.`task_id` = `task`.id
+		left join `user` on `reminder`.`user_id` = `user`.id
+
+        <where>
+			<if test="userName != null and userName != ''">
+				and `user`.`name` like concat ('%', #{userName}, '%')
+			</if>
+			<if test="remName != null and remName != ''">
+				and `task`.`title` like concat ('%', #{remName}, '%')
+			</if>
+			<if test="remindTime != null and remindTime != ''">
+				and `task`.`due_date` like concat ('%', #{remindTime}, '%')
+			</if>
+			<if test="userId != null">
+				and `reminder`.`user_id` = #{userId}
+			</if>
+			<if test="taskId != null">
+				and `reminder`.`task_id` = #{taskId}
+			</if>
+        </where>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Reminder">
+        select * from reminder where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from reminder where  id = #{id}
+    </delete>
+
+</mapper>

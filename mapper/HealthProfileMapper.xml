@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.HealthProfileMapper">
+
+    <select id="selectAll" resultType="com.example.entity.HealthProfile">
+--         SELECT hp.*, u.`name` AS userName
+--         FROM `health_profile` hp
+--         LEFT JOIN `user` u ON hp.`user_id` = u.`id`
+        select `health_profile`.*, `user`.`name` as userName from `health_profile`
+        left join `user` on `health_profile`.`user_id` = `user`.id
+
+        <where>
+			<if test="userName != null and userName != ''">
+				and `user`.`name` like concat ('%', #{userName}, '%')
+			</if>
+			<if test="gender != null and gender != ''">
+				and `health_profile`.`gender` like concat ('%', #{gender}, '%')
+			</if>
+			<if test="userId != null">
+				and `health_profile`.`user_id` = #{userId}
+			</if>
+
+        </where>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.HealthProfile">
+        select * from health_profile where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from health_profile where  id = #{id}
+    </delete>
+
+</mapper>

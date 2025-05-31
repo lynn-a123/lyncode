@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.MedicationReminderMapper">
+
+    <select id="selectAll" resultType="com.example.entity.MedicationReminder">
+--         SELECT m.*, u.`name` AS medName
+--         FROM `medication_reminder` m
+--         LEFT JOIN `user` u ON m.`user_id` = u.`id`
+        select `medication_reminder`.*, `user`.`name` as medName from `medication_reminder`
+        left join `user` on `medication_reminder`.`user_id` = `user`.id
+
+
+        <where>
+			<if test="medName != null and medName != ''">
+				and `user`.`name` like concat ('%', #{medName}, '%')
+			</if>
+			<if test="medicationName != null and medicationName != ''">
+				and `medication_reminder`.`medication_name` like concat ('%', #{medicationName}, '%')
+			</if>
+			<if test="userId != null">
+				and `medication_reminder`.`user_id` = #{userId}
+			</if>
+
+        </where>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.MedicationReminder">
+        select * from medication_reminder where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from medication_reminder where  id = #{id}
+    </delete>
+
+</mapper>
