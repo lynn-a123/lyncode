@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BookInfoMapper">
+
+    <select id="selectAll" resultType="com.example.entity.BookInfo">
+        select t.* from `book_info` t
+
+        <where>
+			<if test="name != null and name != ''">
+				and (t.`name` like concat ('%', #{name}, '%') or t.`author` like concat ('%', #{name}, '%'))
+			</if>
+			<if test="typeId != null">
+				and t.`type_id`=#{typeId}
+			</if>
+	      <if test="sort == 1">
+			and t.read_nums >0
+		</if>
+			<if test="uid != null">
+				and t.`uid`=#{uid}
+			</if>
+        </where> 
+        <if test="sort == null">
+			  order by t.create_time desc 
+		</if>	
+		<if test="sort == 1">
+			  order by t.read_nums desc 
+		</if>
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.BookInfo">
+        select * from book_info where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from book_info where  id = #{id}
+    </delete>
+
+</mapper>
